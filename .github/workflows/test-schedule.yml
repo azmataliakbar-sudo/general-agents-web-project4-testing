@@ -1,0 +1,27 @@
+name: Fast Test Schedule
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_dispatch:           # Allow manual trigger
+
+jobs:
+  generate-test-brief:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python test/monday_brief2.py
+      - name: Upload test success signal
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-brief-${{ github.run_id }}
+          path: test/output/test-brief-*.md
+      - name: Commit test output
+        run: |
+          git config user.name "monday-bot"
+          git config user.email "monday-bot@localhost"
+          git add test/output/
+          git commit -m "Test brief $(date -u +%Y-%m-%dT%H:%M:%SZ)" || exit 0
+          git push
