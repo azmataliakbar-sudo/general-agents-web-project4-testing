@@ -1,8 +1,10 @@
 name: Fast Test Schedule
 on:
-  schedule:
-    - cron: '*/10 * * * *'  # Every 10 minutes
-  workflow_dispatch:           # Allow manual trigger
+  # Schedule disabled after successful proof-of-concept test (2026-09-07)
+  # Uncomment the line below only if you need to re-test the clock trigger
+  # schedule:
+  #   - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_dispatch:           # Manual trigger only, for now
 
 jobs:
   generate-test-brief:
